@@ -1,0 +1,48 @@
+Xft.autohint                 : 0
+Xft.lcdfilter                : lcddefault
+Xft.hintstyle                : hintsfull
+Xft.hinting                  : 1
+Xft.antialias                : 1
+Xft.rgba                     : rgb
+Xft*dpi                      : 96
+URxvt.geometry               : 95x30
+URxvt.iso14755               : False
+!URxvt.colorUL               : #FA0B1D
+
+Xcursor.theme                : Breeze_Hacked
+Xcursor.size                 : 22
+
+!URxvt*depth: 32
+!urxvt*background: rgba:1700/1800/1a00/ff00
+
+URxvt.pointerBlank           : true
+URxvt.internalborder         : 0
+
+!URxvt*perl-ext:
+!URxvt*perl-ext-common:
+!URxvt*saveLines              : 0
+
+!URxvt*.transparent           : true
+!URxvt*.shading               : 20
+
+URxvt.colorIT                : #D8650D
+URxvt.colorBD                : #d7d7d7
+URxvt.colorUL                : #87afd7
+
+URxvt*font                   : xft:Hack:pixelsize=12:antialias=true:hinting=true,xft:Hack:pixelsize=12:antialias=true
+URxvt*boldFont               : xft:Hack:bold:pixelsize=12:style=bold
+
+dzen2*font                   : xft:Hack:pixelsize=11:antialias=true:hinting=true,xft:Hack:pixelsize=11:antialias=true
+
+URxvt.scrollBar              : false
+URxvt.scrollWithBuffer       : true
+
+URxvt.background             : #1D2021
+URxvt.foreground             : #D6BE9F
+
+rofi.lines: 10
+rofi.width: 48
+rofi.hide-scrollbar: true
+rofi.color-normal: #1D2021, #5E867D, #1D2021, #1D2021, #ffa724
+rofi.color-active: #1D2021, #ffa724, #1D2021, #1D2021, #ffa724
+rofi.color-window: #1D2021, #1D2021

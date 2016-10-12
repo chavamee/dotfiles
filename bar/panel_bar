@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# Example panel for lemonbar
+
+get() {
+    echo -n $2 | sed -e "s/.*$1 \(\w*\).*/\1/"
+}
+
+. ~/.config/bar/panel_colors
+
+while read -r line ; do
+    case $line in
+        D*)
+            # clock output
+            currDate="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}${line#?}%{B-}%{F-}"
+            ;;
+        T*)
+            # clock output
+            currTime=" %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}${line#?}%{B-}%{F-} "
+            ;;
+        V*)
+            # volume output
+            volperc=$(get 'volperc' "${line#?}")
+            if [[ $volperc -ge 66 && $volperc -le 100 ]]; then
+                volume="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}%{B-}%{F-} "
+            elif [[ $volperc -ge 34 && $volperc -lt 66 ]]; then
+                volume="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}%{B-}%{F-} "
+            elif [[ $volperc -lt 34 ]]; then
+                volume="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}%{B-}%{F-} "
+            fi
+            ;;
+        N*)
+            # network output
+            network="${line#?}%{B-}%{F-}  "
+            ;;
+        B*)
+            # battery output
+            status=$(get 'status' "${line#?}")
+            power=$(get 'power' "${line#?}")
+
+            battery="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}"
+
+            if [[ $status -eq 100 ]]; then
+                battery=$battery" %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}"
+            elif [[ $status -ge 75 && $status -lt 100 ]]; then
+                battery=$battery" %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}"
+            elif [[ $status -ge 50 && $status -lt 75 ]]; then
+                battery=$battery" %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}"
+            elif [[ $status -ge 25 && $status -lt 50 ]]; then
+                battery=$battery" %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}"
+            elif [[ $status -lt 25 ]]; then
+                battery=$battery" %{F$COLOR_URGENT_FG}%{B$COLOR_DEFAULT_BG}"
+            fi
+
+            ;;
+        C*)     # cpu output
+            cpu="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}${line#?}%{B-}%{F-}  "
+            ;;
+        M*)
+            mpd=" ${line#?}%{B-}%{F-}"
+            ;;
+        W*)
+            wm_infos="${line#?}"
+            ;;
+    esac
+    printf "%s\n" "%{l}${wm_infos}%{c}${mpd}%{r}${cpu}${volume}${battery}${network}${currDate}${currTime}"
+done

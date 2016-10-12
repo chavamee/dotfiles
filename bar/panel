@@ -1,0 +1,202 @@
+#!/bin/env bash
+
+. ~/.config/bar/panel_colors
+
+trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
+
+killall lemonbar &> /dev/null
+
+[ -e "$PANEL_FIFO" ] && rm "$PANEL_FIFO"
+mkfifo "$PANEL_FIFO"
+
+herbstclient pad 0 $PANEL_HEIGHT
+
+network() {
+    wifi_int='wlp10s0'
+    eth_int='enp8s0'
+
+    ip link show $eth_int | grep 'state UP' >/dev/null && int=$eth_int || int=$wifi_int
+
+    if [[ $int == $eth_int ]]; then
+        int_symbol=
+    else
+        int_symbol=
+    fi
+
+    #int=eth0
+
+    echo "%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}$int_symbol " || echo "$disconnected"
+}
+
+mpd() {
+    mpdstat=$(mpc status | ag "\[[a-z]+\]" | awk '{printf $1}' | sed 's/\[//' | sed 's/\]//')
+    statussym=""
+    if [ -n "$mpdstat" ]; then
+        if [ $mpdstat = 'playing' ]; then
+            song=$(mpc current)
+            statussym=
+        elif [ $mpdstat = 'paused' ]; then
+            song=$(mpc current)
+            statussym=
+        fi
+    fi
+
+    echo -n "%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}$statussym %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}$song"
+}
+
+battery() {
+    BATC=$(cat /sys/class/power_supply/BAT1/capacity)
+    BATS=$(cat /sys/class/power_supply/BAT1/status)
+
+    read ac <<< `echo -n "power $BATS"`
+    read status <<< `echo -n "status $BATC"`
+
+    echo -n "$ac $status"
+}
+
+volume() {
+    read volperc <<< `echo -n "volperc $(amixer sget Master | grep Mono: | awk '{print $4}' | sed 's/\[//' | sed 's/\]//' | sed 's/%//')"`
+    echo -n "$volperc"
+}
+
+cpuload() {
+    loadval=$(uptime | awk {'printf $(NF-2)$(NF-1)$NF'} | sed 's/,/ /g')
+    echo -n "$loadval"
+}
+
+index_to_icon() {
+    case $1 in
+        1)
+            wm_info_sym=""
+            ;;
+        2)
+            wm_info_sym=""
+            ;;
+        3)
+            wm_info_sym=""
+            ;;
+        4)
+            wm_info_sym=""
+            ;;
+        5)
+            wm_info_sym=""
+            ;;
+        6)
+            wm_info_sym=""
+            ;;
+        7)
+            wm_info_sym=""
+            ;;
+        8)
+            wm_info_sym=""
+            ;;
+        9)
+            wm_info_sym=""
+            ;;
+        *)
+            if [[ ${i:0:1} != '.' ]]; then
+                wm_info_sym="${i:1}"
+            fi
+            ;;
+
+        esac
+        echo $wm_info_sym
+    }
+
+    # clock -sf 'S%a %H:%M' > "$PANEL_FIFO" &
+    while :; do
+        echo 'D'$(date '+%a %b,%d')
+        sleep 1000
+    done > $PANEL_FIFO &
+
+    while :; do
+        echo 'T'$(date '+%I:%M')
+        sleep 1
+    done > "$PANEL_FIFO" &
+
+    while :; do
+        echo 'V'$(volume)
+        sleep 0.2
+    done > "$PANEL_FIFO" &
+
+    while :; do
+        echo 'N'$(network)
+        sleep 5
+    done > "$PANEL_FIFO" &
+
+    while :; do
+        echo 'C'$(cpuload)
+        sleep 2
+    done > "$PANEL_FIFO" &
+
+    while :; do
+        echo 'M'$(mpd)
+        sleep 1
+    done > "$PANEL_FIFO" &
+
+
+    while [[ true ]]; do
+        wm_infos=""
+        TAGS=( $(herbstclient tag_status) )
+        counter=1;
+        for i in "${TAGS[@]}" ; do
+            active=true
+            case ${i:0:1} in
+                '#')
+                    # focused occupied desktop
+                    FG=$COLOR_FOCUSED_FG
+                    BG=$COLOR_DEFAULT_BG
+                    wm_info_str="%{U$COLOR_OCCUPIED_FG}%{+u} $(index_to_icon $counter) %{-u}"
+                    ;;
+                '+')
+                    # focused free desktop
+                    FG=$COLOR_FOCUSED_FG
+                    BG=$COLOR_DEFAULT_BG
+                    wm_info_str="%{U$COLOR_FOCUSED_FG}%{+u} $(index_to_icon $counter) %{-u}"
+                    ;;
+                '!')
+                    # focused urgent desktop
+                    FG=$COLOR_FOCUSED_URGENT_FG
+                    BG=$COLOR_FOCUSED_URGENT_BG
+                    wm_info_str="%{U$COLOR_FOCUSED_FG}%{+u} $(index_to_icon $counter) %{-u}"
+                    ;;
+                ':')
+                    # occupied desktop
+                    FG=$COLOR_OCCUPIED_FG
+                    BG=$COLOR_DEFAULT_BG
+                    wm_info_str=" $(index_to_icon $counter) "
+                    ;;
+                '-')
+                    # occupied desktop
+                    FG=$COLOR_OCCUPIED_FG
+                    BG=$COLOR_DEFAULT_BG
+                    wm_info_str=" $(index_to_icon $counter) "
+                    ;;
+                '.')
+                    active=false
+                    ;;
+            esac
+            shift
+
+            if [ $active == true ]; then
+                wm_info_str=$wm_info_str
+                wm_infos="${wm_infos}%{F${FG}}%{B${BG}}${wm_info_str}%{B-}%{F-}"
+            else
+                wm_infos="${wm_infos}"
+            fi
+            ((counter++))
+        done
+        sleep .1
+        echo "W$wm_infos"
+    done > $PANEL_FIFO &
+
+    if [ -d /sys/class/power_supply/BAT1 ]; then
+        while :; do
+            echo 'B'$(battery)
+            sleep 2
+        done > "$PANEL_FIFO" &
+    fi
+
+    ~/.config/bar/panel_bar < "$PANEL_FIFO" | lemonbar -u 1 -a 32 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "Hack:size=8" -F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" -f "FontAwesome:size=10" eDP-1 | sh &
+
+    wait

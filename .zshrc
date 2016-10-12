@@ -1,0 +1,114 @@
+source ~/.zshenv
+
+#Enable colors
+autoload -U colors && colors
+autoload -U compinit
+compinit
+
+#Enable autocompletion
+setopt completealiases
+
+#Bind ncmpcpp to Alt-\
+ncmpcppShow() { BUFFER="ncmpcpp"; zle accept-line;  }
+zle -N ncmpcppShow
+bindkey '^[\' ncmpcppShow
+
+#Enable history search
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+[[ -n "${key[PageUp]}"    ]]  && bindkey  "${key[PageUp]}"    history-beginning-search-backward
+[[ -n "${key[PageDown]}"  ]]  && bindkey  "${key[PageDown]}"  history-beginning-search-forward
+
+#Enable completion on powerpill
+compdef _pacman powerpill=pacman
+
+#Autocompletion with Arrow-key driven interface
+zstyle ':completion:*' menu select
+#Color files in autocomplete as ls does
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+#Reload autocomplete to find newly added binaries
+zstyle ':completion:*' rehash true
+#Enable cache
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+#Ignore CVS files
+zstyle ':completion:*:(all-|)files' ignored-patterns '(|*/)CVS'
+zstyle ':completion:*:cd:*' ignored-patterns '(*/)#CVS'
+#Fuzzy autocompletion
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle -e ':completion:*:approximate:*' \
+        max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
+#Ignore unknown functions
+zstyle ':completion:*:functions' ignored-patterns '_*'
+#Remove trailing forward slash
+zstyle ':completion:*' squeeze-slashes true
+
+#Command not found hook -  pkgfile
+source /usr/share/doc/pkgfile/command-not-found.zsh
+
+#Enable zsh syntax highlighting
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+#Enable prompts
+autoload -U promptinit
+promptinit
+
+PROMPT=" %{$fg_bold[yellow]%}%2~%{$reset_color%} %{$fg[cyan]%}>%{$reset_color%} "
+RPROMPT="%{$fg_bold[magenta]%}%!%{$reset_color%}"
+
+#Set history settings
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.history
+
+bindkey '^R' history-incremental-search-backward
+
+# turn on spelling correction
+setopt correct
+# don't save duplicates in command history
+setopt histignoredups
+# don't allow accidental file over-writes
+setopt noclobber
+#don't store commands prefixed with a space
+setopt histignorespace
+
+# Program aliases
+alias chronyc="sudo chronyc -a"
+alias gdb='gdb -q'
+
+# File manipulation and search
+alias rm=' timeout 3 rm -Iv --one-file-system'
+alias grep='grep --color=auto'
+alias ls='ls --color=auto'
+alias mv=' timeout 8 mv -iv'
+alias cp=' timeout 8 cp -iv'
+alias mkdir='mkdir -p -v'
+
+# Bluetooth (un)lock
+alias unblockblue='sudo rfkill unblock bluetooth && sudo systemctl start bluetooth'
+alias blockblue='sudo systemctl stop bluetooth && sudo rfkill block bluetooth'
+
+#Enable help
+autoload -Uz run-help
+autoload -Uz run-help-git
+autoload -Uz run-help-svn
+autoload -Uz run-help-svk
+unalias run-help
+alias help=run-help
+
+#Exports
+export PACMAN=powerpill
+export EDITOR=/usr/bin/nvim
+export XDG_CONFIG_HOME=$HOME/.config
+export PATH="$HOME/perl5/bin${PATH+:}${PATH}"; export PATH;
+export PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
+export PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
+export PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
+export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
+
+#Enable fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#Enable keycahin
+eval $(keychain --eval --quiet id_rsa id_aur allseen_rsa)
