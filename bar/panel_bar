@@ -31,30 +31,36 @@ while read -r line ; do
             ;;
         N*)
             # network output
-            network="${line#?}%{B-}%{F-}  "
+            if [ ${line#?} ];then
+                network="%{F#fbf1c7}%{B$COLOR_DEFAULT_BG}${line#?}%{B-}%{F-}  "
+            fi
             ;;
         B*)
             # battery output
             status=$(get 'status' "${line#?}")
             power=$(get 'power' "${line#?}")
 
-            battery="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}"
 
-            if [[ $status -eq 100 ]]; then
-                battery=$battery" %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}"
-            elif [[ $status -ge 75 && $status -lt 100 ]]; then
-                battery=$battery" %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}"
-            elif [[ $status -ge 50 && $status -lt 75 ]]; then
-                battery=$battery" %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}"
-            elif [[ $status -ge 25 && $status -lt 50 ]]; then
-                battery=$battery" %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}"
-            elif [[ $status -lt 25 ]]; then
-                battery=$battery" %{F$COLOR_URGENT_FG}%{B$COLOR_DEFAULT_BG}"
+            if [[ $status -gt 10 ]]; then
+                battery="%{F#fbf1c7}%{B$COLOR_DEFAULT_BG}"
+            else
+                battery="%{F$COLOR_URGENT_FG}%{B$COLOR_DEFAULT_BG}"
             fi
 
+            if [[ $status -eq 100 ]]; then
+                battery=$battery" %{F-}%{B-}"
+            elif [[ $status -ge 75 && $status -lt 100 ]]; then
+                battery=$battery" %{F-}%{B-}"
+            elif [[ $status -ge 50 && $status -lt 75 ]]; then
+                battery=$battery" %{F-}%{B-}"
+            elif [[ $status -ge 25 && $status -lt 50 ]]; then
+                battery=$battery" %{F-}%{B-}"
+            elif [[ $status -lt 25 ]]; then
+                battery=$battery" %{F-}%{B-}"
+            fi
             ;;
         C*)     # cpu output
-            cpu="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}${line#?}%{B-}%{F-}  "
+            cpu="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}${line#?}%{B-}%{F-} "
             ;;
         M*)
             mpd=" ${line#?}%{B-}%{F-}"
@@ -63,5 +69,5 @@ while read -r line ; do
             wm_infos="${line#?}"
             ;;
     esac
-    printf "%s\n" "%{l}${wm_infos}%{c}${mpd}%{r}${cpu}${volume}${battery}${network}${currDate}${currTime}"
+    printf "%s\n" "%{l}${wm_infos}%{c}${mpd}%{r}${cpu}${volume}${battery}${network} ${currDate}${currTime}"
 done

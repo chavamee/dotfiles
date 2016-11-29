@@ -163,7 +163,7 @@ Plug 'Shougo/neoinclude.vim'
 
 Plug 'nathanaelkane/vim-indent-guides'
 
-Plug 'tpope/vim-surround'
+"Plug 'tpope/vim-surround'
 
 Plug 'ntpeters/vim-better-whitespace'
 
@@ -187,9 +187,9 @@ Plug 'KabbAmine/zeavim.vim'
 
 Plug 'xolox/vim-misc'
 
-Plug 'Raimondi/delimitMate'
+"Plug 'Raimondi/delimitMate'
 
-"Plug 'jiangmiao/auto-pairs'
+Plug 'jiangmiao/auto-pairs'
 
 Plug 'mbbill/undotree'
 
@@ -264,17 +264,47 @@ endif
 let g:NERDSpaceDelims = 1
 let g:NERDCompactSexyComs = 1
 
-" UltiSnips config
-let g:UltiSnipsExpandTrigger       = "<c-p>"
-let g:UltiSnipsJumpForwardTrigger  = "<c-l>"
-let g:UltiSnipsJumpBackwardTrigger = "<c-t>"
-let g:UltiSnipsListSnippets        = "<c-k>"
-let g:UltiSnipsUsePythonVersion = 2"
-
-let g:UltiSnipsSnippetDirectories=["UltiSnips", "vim-snippets"]
-
+set omnifunc=syntaxcomplete#Complete
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
+let g:deoplete#disable_auto_complete = 0
+set completeopt+=noselect
+let g:deoplete#enable_ignore_case = 'ignorecase'
+let g:deoplete#omni_patterns = {}
+let g:deoplete#omni_patterns.html = '<[^>]*'
+let g:deoplete#omni_patterns.xml  = '<[^>]*'
+let g:deoplete#omni_patterns.md   = '<[^>]*'
+let g:deoplete#omni_patterns.css   = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
+let g:deoplete#omni_patterns.scss   = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
+let g:deoplete#omni_patterns.sass   = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
+let g:deoplete#omni_patterns.javascript = '[^. \t]\.\%(\h\w*\)\?'
+let g:deoplete#omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+let g:deoplete#omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+let g:deoplete#omni_patterns.go = '[^.[:digit:] *\t]\.\w*'
+let g:deoplete#omni_patterns.ruby = ['[^. *\t]\.\w*', '\h\w*::']
+" let g:deoplete#omni_patterns.python = '[^. \t]\.\w*'
+let g:deoplete#omni_patterns.python = ['[^. *\t]\.\h\w*\','\h\w*::']
+let g:deoplete#omni_patterns.python3 = ['[^. *\t]\.\h\w*\','\h\w*::']
+let g:deoplete#sources#go#gocode_binary = '/usr/bin/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+let g:deoplete#sources#go#use_cache = 1
+autocmd CmdwinEnter * let b:deoplete_sources = ['buffer']
+
+set conceallevel=2
+set concealcursor=vin
+
+let g:clang_snippets = 1
+let g:clang_snippets_engine = 'clang_complete'
+
+" Complete options (disable preview scratch window, longest removed to aways
+" show menu)
+set completeopt=menu,menuone
+
+" Limit popup menu height
+set pumheight=20
+
+imap     <Nul> <C-Space>
+inoremap <expr><C-Space> deoplete#mappings#manual_complete()
+inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
 
 let g:easytags_cmd='/usr/bin/ctags'
 let g:easytags_suppress_ctags_warning = 1
@@ -300,12 +330,13 @@ let g:syntastic_sh_checkers = ["sh", "bashate"]
 let g:syntastic_javascript_checkers = ["jslint", "flow"]
 let g:syntastic_json_checkers = ["jsonlint"]
 
-let g:syntastic_cpp_compiler = 'clang'
+let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_cpp_check_header = 1
 
 let g:syntastic_javascript_checkers = ['standard']
 
 let g:syntastic_go_checkers = ['go', 'gofmt']
+"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 " Vim-go
 let g:go_highlight_functions = 1
@@ -314,6 +345,7 @@ let g:go_highlight_structs = 1
 let g:go_highlight_interfaces = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
+let g:go_fmt_autosave = 1
 
 " Powerline
 let $PYTHONPATH="/usr/lib/python3.3/site-packages"

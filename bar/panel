@@ -14,30 +14,34 @@ herbstclient pad 0 $PANEL_HEIGHT
 network() {
     wifi_int='wlp10s0'
     eth_int='enp8s0'
+    int=''
+    int_symbol=''
 
-    ip link show $eth_int | grep 'state UP' >/dev/null && int=$eth_int || int=$wifi_int
-
-    if [[ $int == $eth_int ]]; then
-        int_symbol=
-    else
+    if [ $(ip addr show $wifi_int | grep 'inet' >/dev/null) ]; then
+        int=$wifi_int
         int_symbol=
+        echo "$int_symbol "
+    elif [ $(ip link show $eth_int | grep 'state UP') ]; then
+        int=$eth_int
+        int_symbol=
+        echo "$int_symbol "
+    else
+        echo ""
     fi
-
-    #int=eth0
-
-    echo "%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}$int_symbol " || echo "$disconnected"
 }
 
 mpd() {
-    mpdstat=$(mpc status | ag "\[[a-z]+\]" | awk '{printf $1}' | sed 's/\[//' | sed 's/\]//')
-    statussym=""
-    if [ -n "$mpdstat" ]; then
-        if [ $mpdstat = 'playing' ]; then
-            song=$(mpc current)
-            statussym=
-        elif [ $mpdstat = 'paused' ]; then
+    if [ -z "$(pidof spotify)" ]; then
+        mpdstat=$(mpc status | ag "\[[a-z]+\]" | awk '{printf $1}' | sed 's/\[//' | sed 's/\]//')
+        statussym=""
+        if [ -n "$mpdstat" ]; then
+            if [ $mpdstat = 'playing' ]; then
+                song=$(mpc current)
+                statussym=
+            elif [ $mpdstat = 'paused' ]; then
             song=$(mpc current)
             statussym=
+            fi
         fi
     fi
 
@@ -60,7 +64,7 @@ volume() {
 }
 
 cpuload() {
-    loadval=$(uptime | awk {'printf $(NF-2)$(NF-1)$NF'} | sed 's/,/ /g')
+    loadval=$(uptime | awk {'printf $(NF-2)$(NF-1)$NF'} | sed 's/,/ /g' | awk {'printf $(NF-2)'})
     echo -n "$loadval"
 }
 
@@ -115,13 +119,8 @@ index_to_icon() {
     done > "$PANEL_FIFO" &
 
     while :; do
-        echo 'V'$(volume)
-        sleep 0.2
-    done > "$PANEL_FIFO" &
-
-    while :; do
         echo 'N'$(network)
-        sleep 5
+        sleep 10
     done > "$PANEL_FIFO" &
 
     while :; do
@@ -146,19 +145,19 @@ index_to_icon() {
                     # focused occupied desktop
                     FG=$COLOR_FOCUSED_FG
                     BG=$COLOR_DEFAULT_BG
-                    wm_info_str="%{U$COLOR_OCCUPIED_FG}%{+u} $(index_to_icon $counter) %{-u}"
+                    wm_info_str=" $(index_to_icon $counter) "
                     ;;
                 '+')
                     # focused free desktop
                     FG=$COLOR_FOCUSED_FG
                     BG=$COLOR_DEFAULT_BG
-                    wm_info_str="%{U$COLOR_FOCUSED_FG}%{+u} $(index_to_icon $counter) %{-u}"
+                    wm_info_str="$(index_to_icon $counter) "
                     ;;
                 '!')
                     # focused urgent desktop
                     FG=$COLOR_FOCUSED_URGENT_FG
                     BG=$COLOR_FOCUSED_URGENT_BG
-                    wm_info_str="%{U$COLOR_FOCUSED_FG}%{+u} $(index_to_icon $counter) %{-u}"
+                    wm_info_str=" $(index_to_icon $counter) "
                     ;;
                 ':')
                     # occupied desktop
@@ -181,8 +180,6 @@ index_to_icon() {
             if [ $active == true ]; then
                 wm_info_str=$wm_info_str
                 wm_infos="${wm_infos}%{F${FG}}%{B${BG}}${wm_info_str}%{B-}%{F-}"
-            else
-                wm_infos="${wm_infos}"
             fi
             ((counter++))
         done
