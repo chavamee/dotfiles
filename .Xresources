@@ -43,6 +43,6 @@ URxvt.foreground             : #D6BE9F
 rofi.lines: 10
 rofi.width: 48
 rofi.hide-scrollbar: true
-rofi.color-normal: #1D2021, #5E867D, #1D2021, #1D2021, #ffa724
+rofi.color-normal: #1D2021, #e0e0e0, #1D2021, #1D2021, #ffa724
 rofi.color-active: #1D2021, #ffa724, #1D2021, #1D2021, #ffa724
 rofi.color-window: #1D2021, #1D2021
