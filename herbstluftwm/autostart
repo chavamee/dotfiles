@@ -19,23 +19,24 @@ hc keybind Mod1-Control-Delete quit
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Shift-c close
 hc spawn sh ~/.fehbg &
+hc spawn trayer --edge bottom --SetDockType true --transparent true --widthtype request --align center --height 18 --alpha 255
 
 #Custom Key Bindings
 hc keybind $Mod-Return spawn termite -e zsh -c "tmux -q has-session && exec tmux attach-session -d || exec tmux new-session -n$USER -s$USER@$HOSTNAME"
 hc keybind $Mod-d spawn rofi -font "Hack 10" -show run
-hc keybind $Mod-Mod1-l spawn i3lock -f -i /home/jarkore/Pictures/Underwater_Simple.png
+hc keybind $Mod-Mod1-l spawn i3lock -f -i $HOME/media/pictures/Underwater_Simple.png
 
 #Fn Multimedia Bindings
 hc keybind XF86AudioPlay spawn ~/.config/herbstluftwm/audio_handle/audio.sh toggle
 
 hc keybind XF86AudioPrev spawn ~/.config/herbstluftwm/audio_handle/audio.sh prev
 hc keybind XF86AudioNext spawn ~/.config/herbstluftwm/audio_handle/audio.sh next
-hc keybind XF86AudioRaiseVolume spawn pulseaudio-ctl up
-hc keybind XF86AudioLowerVolume spawn pulseaudio-ctl down
-hc keybind XF86AudioMute spawn pulseaudio-ctl mute
+hc keybind XF86AudioRaiseVolume spawn amixer -q sset Master 3%+
+hc keybind XF86AudioLowerVolume spawn amixer -q sset Master 3%-
+hc keybind XF86AudioMute spawn amixer -q sset Master toggle
 
-hc keybind XF86MonBrightnessUp spawn xbacklight -inc 1
-hc keybind XF86MonBrightnessDown spawn xbacklight -dec 1
+hc keybind XF86MonBrightnessUp spawn light -A 1
+hc keybind XF86MonBrightnessDown spawn light -U 1
 
 # basic movement
 # focusing clients
@@ -174,4 +175,3 @@ panel=~/.config/bar/panel
     # start it on each monitor
 "$panel" &
 #done
-hc spawn trayer --edge bottom --SetDockType true --transparent true --widthtype request --align right --height 18 --alpha 255
