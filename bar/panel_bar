@@ -12,55 +12,11 @@ while read -r line ; do
     case $line in
         D*)
             # clock output
-            currDate="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}${line#?}%{B-}%{F-}"
+            currDate="%{F$COLOR_TITLE_FG}${line#?}%{B-}%{F-}"
             ;;
         T*)
             # clock output
-            currTime=" %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}${line#?}%{B-}%{F-} "
-            ;;
-        V*)
-            # volume output
-            volperc=$(get 'volperc' "${line#?}")
-            if [[ $volperc -ge 66 && $volperc -le 100 ]]; then
-                volume="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}%{B-}%{F-} "
-            elif [[ $volperc -ge 34 && $volperc -lt 66 ]]; then
-                volume="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}%{B-}%{F-} "
-            elif [[ $volperc -lt 34 ]]; then
-                volume="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}%{B-}%{F-} "
-            fi
-            ;;
-        N*)
-            # network output
-            if [ ${line#?} ];then
-                network="%{F#fbf1c7}%{B$COLOR_DEFAULT_BG}${line#?}%{B-}%{F-}  "
-            fi
-            ;;
-        B*)
-            # battery output
-            status=$(get 'status' "${line#?}")
-            power=$(get 'power' "${line#?}")
-
-
-            if [[ $status -gt 10 ]]; then
-                battery="%{F#fbf1c7}%{B$COLOR_DEFAULT_BG}"
-            else
-                battery="%{F$COLOR_URGENT_FG}%{B$COLOR_DEFAULT_BG}"
-            fi
-
-            if [[ $status -eq 100 ]]; then
-                battery=$battery" %{F-}%{B-}"
-            elif [[ $status -ge 75 && $status -lt 100 ]]; then
-                battery=$battery" %{F-}%{B-}"
-            elif [[ $status -ge 50 && $status -lt 75 ]]; then
-                battery=$battery" %{F-}%{B-}"
-            elif [[ $status -ge 25 && $status -lt 50 ]]; then
-                battery=$battery" %{F-}%{B-}"
-            elif [[ $status -lt 25 ]]; then
-                battery=$battery" %{F-}%{B-}"
-            fi
-            ;;
-        C*)     # cpu output
-            cpu="%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}${line#?}%{B-}%{F-} "
+            currTime=" %{F$COLOR_TITLE_FG}${line#?}%{B-}%{F-} "
             ;;
         M*)
             mpd=" ${line#?}%{B-}%{F-}"
@@ -69,5 +25,5 @@ while read -r line ; do
             wm_infos="${line#?}"
             ;;
     esac
-    printf "%s\n" "%{l}${wm_infos}%{c}${mpd}%{r}${cpu}${volume}${battery}${network} ${currDate}${currTime}"
+    printf "%s\n" "%{l}${wm_infos}%{c}${mpd}%{r}${currDate}${currTime}"
 done

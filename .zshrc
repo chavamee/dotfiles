@@ -2,11 +2,6 @@ source ~/.zshenv
 
 #Enable colors
 autoload -U colors && colors
-autoload -U compinit
-compinit
-
-#Enable autocompletion
-setopt completealiases
 
 #Bind ncmpcpp to Alt-\
 ncmpcppShow() { BUFFER="ncmpcpp"; zle accept-line;  }
@@ -20,8 +15,7 @@ zle -N down-line-or-beginning-search
 [[ -n "${key[PageUp]}"    ]]  && bindkey  "${key[PageUp]}"    history-beginning-search-backward
 [[ -n "${key[PageDown]}"  ]]  && bindkey  "${key[PageDown]}"  history-beginning-search-forward
 
-#Enable completion on powerpill
-compdef _pacman powerpill=pacman
+eval `dircolors -b`
 
 #Autocompletion with Arrow-key driven interface
 zstyle ':completion:*' menu select
@@ -45,18 +39,25 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 #Remove trailing forward slash
 zstyle ':completion:*' squeeze-slashes true
 
+#Enable autocompletion
+autoload -U compinit
+compinit
+setopt completealiases
+
+#Enable completion on powerpill
+compdef _pacman powerpill=pacman
+
 #Command not found hook -  pkgfile
 source /usr/share/doc/pkgfile/command-not-found.zsh
 
 #Enable zsh syntax highlighting
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 #Enable prompts
 autoload -U promptinit
 promptinit
 
-PROMPT=" %{$fg_bold[yellow]%}%2~%{$reset_color%} %{$fg[cyan]%}>%{$reset_color%} "
-RPROMPT="%{$fg_bold[magenta]%}%!%{$reset_color%}"
+PROMPT=" %{$fg_bold[white]%}%2~%{$reset_color%} %{$fg[yellow]%}]%{$reset_color%} "
 
 #Set history settings
 HISTSIZE=1000
@@ -99,7 +100,6 @@ unalias run-help
 alias help=run-help
 
 #Exports
-export PACMAN=powerpill
 export EDITOR=/usr/bin/nvim
 export XDG_CONFIG_HOME=$HOME/.config
 export PATH="$HOME/perl5/bin${PATH+:}${PATH}"; export PATH;
@@ -109,6 +109,7 @@ export PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
 export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
 
 #Enable fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source ~/.fzf/shell/key-bindings.zsh
+source ~/.fzf/shell/completion.zsh
 #Enable keycahin
-eval $(keychain --eval --quiet id_rsa id_aur allseen_rsa)
+eval $(keychain --eval --quiet id_rsa)

@@ -2,6 +2,8 @@
 
 . ~/.config/bar/panel_colors
 
+PANEL_FIFO=/tmp/panel-fifo
+PANEL_HEIGHT=26
 trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
 
 killall lemonbar &> /dev/null
@@ -10,25 +12,6 @@ killall lemonbar &> /dev/null
 mkfifo "$PANEL_FIFO"
 
 herbstclient pad 0 $PANEL_HEIGHT
-
-network() {
-    wifi_int='wlp10s0'
-    eth_int='enp8s0'
-    int=''
-    int_symbol=''
-
-    if [ $(ip addr show $wifi_int | grep 'inet' >/dev/null) ]; then
-        int=$wifi_int
-        int_symbol=
-        echo "$int_symbol "
-    elif [ $(ip link show $eth_int | grep 'state UP') ]; then
-        int=$eth_int
-        int_symbol=
-        echo "$int_symbol "
-    else
-        echo ""
-    fi
-}
 
 mpd() {
     if [ -z "$(pidof spotify)" ]; then
@@ -45,27 +28,7 @@ mpd() {
         fi
     fi
 
-    echo -n "%{F$COLOR_TITLE_FG}%{B$COLOR_DEFAULT_BG}$statussym %{F$COLOR_SYS_FG}%{B$COLOR_DEFAULT_BG}$song"
-}
-
-battery() {
-    BATC=$(cat /sys/class/power_supply/BAT1/capacity)
-    BATS=$(cat /sys/class/power_supply/BAT1/status)
-
-    read ac <<< `echo -n "power $BATS"`
-    read status <<< `echo -n "status $BATC"`
-
-    echo -n "$ac $status"
-}
-
-volume() {
-    read volperc <<< `echo -n "volperc $(amixer sget Master | grep Mono: | awk '{print $4}' | sed 's/\[//' | sed 's/\]//' | sed 's/%//')"`
-    echo -n "$volperc"
-}
-
-cpuload() {
-    loadval=$(uptime | awk {'printf $(NF-2)$(NF-1)$NF'} | sed 's/,/ /g' | awk {'printf $(NF-2)'})
-    echo -n "$loadval"
+    echo -n "%{F$COLOR_TITLE_FG}$statussym %{F$COLOR_SYS_FG}$song"
 }
 
 index_to_icon() {
@@ -119,11 +82,6 @@ index_to_icon() {
     done > "$PANEL_FIFO" &
 
     while :; do
-        echo 'N'$(network)
-        sleep 10
-    done > "$PANEL_FIFO" &
-
-    while :; do
         echo 'C'$(cpuload)
         sleep 2
     done > "$PANEL_FIFO" &
@@ -144,31 +102,26 @@ index_to_icon() {
                 '#')
                     # focused occupied desktop
                     FG=$COLOR_FOCUSED_FG
-                    BG=$COLOR_DEFAULT_BG
                     wm_info_str=" $(index_to_icon $counter) "
                     ;;
                 '+')
                     # focused free desktop
                     FG=$COLOR_FOCUSED_FG
-                    BG=$COLOR_DEFAULT_BG
                     wm_info_str="$(index_to_icon $counter) "
                     ;;
                 '!')
                     # focused urgent desktop
                     FG=$COLOR_FOCUSED_URGENT_FG
-                    BG=$COLOR_FOCUSED_URGENT_BG
                     wm_info_str=" $(index_to_icon $counter) "
                     ;;
                 ':')
                     # occupied desktop
                     FG=$COLOR_OCCUPIED_FG
-                    BG=$COLOR_DEFAULT_BG
                     wm_info_str=" $(index_to_icon $counter) "
                     ;;
                 '-')
                     # occupied desktop
                     FG=$COLOR_OCCUPIED_FG
-                    BG=$COLOR_DEFAULT_BG
                     wm_info_str=" $(index_to_icon $counter) "
                     ;;
                 '.')
@@ -179,7 +132,7 @@ index_to_icon() {
 
             if [ $active == true ]; then
                 wm_info_str=$wm_info_str
-                wm_infos="${wm_infos}%{F${FG}}%{B${BG}}${wm_info_str}%{B-}%{F-}"
+                wm_infos="${wm_infos}%{F${FG}}${wm_info_str}%{B-}%{F-}"
             fi
             ((counter++))
         done
@@ -187,13 +140,6 @@ index_to_icon() {
         echo "W$wm_infos"
     done > $PANEL_FIFO &
 
-    if [ -d /sys/class/power_supply/BAT1 ]; then
-        while :; do
-            echo 'B'$(battery)
-            sleep 2
-        done > "$PANEL_FIFO" &
-    fi
-
-    ~/.config/bar/panel_bar < "$PANEL_FIFO" | lemonbar -u 1 -a 32 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "Hack:size=8" -F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" -f "FontAwesome:size=10" eDP-1 | sh &
+    ~/.config/bar/panel_bar < "$PANEL_FIFO" | lemonbar -u 1 -a 32 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "Hack:size=8" -F "$COLOR_DEFAULT_FG" -B "#00000000" -f "FontAwesome:size=10" HDMI-0 | sh &
 
     wait

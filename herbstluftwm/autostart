@@ -18,8 +18,12 @@ Mod=Mod4   # Use the super key as the main modifier
 hc keybind Mod1-Control-Delete quit
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Shift-c close
-hc spawn sh ~/.fehbg &
-hc spawn trayer --edge bottom --SetDockType true --transparent true --widthtype request --align center --height 18 --alpha 255
+hc spawn anamnesis --start &
+hc spawn mpd --start &
+hc spawn sleep 2 && nitrogen --restore &
+hc spawn killall compton && sleep 1 && compton -CGb
+hc spawn sleep 2 && mpd
+
 
 #Custom Key Bindings
 hc keybind $Mod-Return spawn termite -e zsh -c "tmux -q has-session && exec tmux attach-session -d || exec tmux new-session -n$USER -s$USER@$HOSTNAME"
@@ -175,3 +179,5 @@ panel=~/.config/bar/panel
     # start it on each monitor
 "$panel" &
 #done
+
+hc spawn killall trayer && trayer --edge bottom --SetDockType true --transparent true --widthtype request --align right --height 18 --alpha 255 --tint 0x000000 --transparent true

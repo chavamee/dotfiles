@@ -3,7 +3,7 @@ lyrics_directory = "~/.lyrics"
 
 mpd_host = "localhost"
 mpd_port = "6600"
-mpd_music_dir = "~/Music"
+mpd_music_dir = "~/media/music"
 mpd_crossfade_time = "5"
 
 user_interface = "alternative" #(classic/alternative)
@@ -23,15 +23,15 @@ use_console_editor = "yes" (set to yes, if your editor is console app)
 ##### colors definitions #####
 colors_enabled = "yes"
 empty_tag_color = "white"
-header_window_color = 215 
+header_window_color = 215
 volume_color = "white"
 state_line_color = "white"
-state_flags_color = 215 
-main_window_color = 215 
+state_flags_color = 215
+main_window_color = 215
 progressbar_color = 67
-progressbar_elapsed_color = 215 
+progressbar_elapsed_color = 215
 statusbar_color = "white"
-alternative_ui_separator_color = 67 
+alternative_ui_separator_color = 67
 
 audio_output {
     type    "fifo"
