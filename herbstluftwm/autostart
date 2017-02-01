@@ -23,12 +23,13 @@ hc spawn mpd --start &
 hc spawn sleep 2 && nitrogen --restore &
 hc spawn killall compton && sleep 1 && compton -CGb
 hc spawn sleep 2 && mpd
-
+hc spawn sleep 2 && libinput-gestures-setup start
+hc spawn killall trayer && sleep 2 && bash -c "trayer --edge bottom --SetDockType true --transparent true --widthtype request --align center --height 18 --alpha 255 --tint 0x000000 --transparent true &"
 
 #Custom Key Bindings
 hc keybind $Mod-Return spawn termite -e zsh -c "tmux -q has-session && exec tmux attach-session -d || exec tmux new-session -n$USER -s$USER@$HOSTNAME"
 hc keybind $Mod-d spawn rofi -font "Hack 10" -show run
-hc keybind $Mod-Mod1-l spawn i3lock -f -i $HOME/media/pictures/Underwater_Simple.png
+hc keybind $Mod-Mod1-l spawn i3lock -f -i $HOME/media/pics/bDp9LVt.png
 
 #Fn Multimedia Bindings
 hc keybind XF86AudioPlay spawn ~/.config/herbstluftwm/audio_handle/audio.sh toggle
@@ -179,5 +180,3 @@ panel=~/.config/bar/panel
     # start it on each monitor
 "$panel" &
 #done
-
-hc spawn killall trayer && trayer --edge bottom --SetDockType true --transparent true --widthtype request --align right --height 18 --alpha 255 --tint 0x000000 --transparent true

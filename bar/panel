@@ -82,11 +82,6 @@ index_to_icon() {
     done > "$PANEL_FIFO" &
 
     while :; do
-        echo 'C'$(cpuload)
-        sleep 2
-    done > "$PANEL_FIFO" &
-
-    while :; do
         echo 'M'$(mpd)
         sleep 1
     done > "$PANEL_FIFO" &
@@ -140,6 +135,6 @@ index_to_icon() {
         echo "W$wm_infos"
     done > $PANEL_FIFO &
 
-    ~/.config/bar/panel_bar < "$PANEL_FIFO" | lemonbar -u 1 -a 32 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "Hack:size=8" -F "$COLOR_DEFAULT_FG" -B "#00000000" -f "FontAwesome:size=10" HDMI-0 | sh &
+    ~/.config/bar/panel_bar < "$PANEL_FIFO" | lemonbar -u 1 -a 32 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "Hack:size=8" -F "$COLOR_DEFAULT_FG" -B "#00000000" -f "FontAwesome:size=10" eDP-1 | sh &
 
     wait
