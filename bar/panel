@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-. ~/.config/bar/panel_colors
+. $HOME/.config/bar/panel_colors
 
 PANEL_FIFO=/tmp/panel-fifo
 PANEL_HEIGHT=26
@@ -28,7 +28,17 @@ mpd() {
         fi
     fi
 
-    echo -n "%{F$COLOR_TITLE_FG}$statussym %{F$COLOR_SYS_FG}$song"
+    echo -n "%{F$COLOR_MPD_STATE}$statussym %{F$COLOR_MPD_TRACK}$song"
+}
+
+battery() {
+    BATC=$(cat /sys/class/power_supply/BAT0/capacity)
+    BATS=$(cat /sys/class/power_supply/BAT0/status)
+
+    read ac <<< `echo -n "power $BATS"`
+    read status <<< `echo -n "status $BATC"`
+
+    echo -n "$ac $status"
 }
 
 index_to_icon() {
@@ -86,6 +96,14 @@ index_to_icon() {
         sleep 1
     done > "$PANEL_FIFO" &
 
+    if [ -d /sys/class/power_supply/BAT0 ]; then
+        while :; do
+            echo 'B'$(battery)
+            sleep 60
+        done > "$PANEL_FIFO" &
+    fi
+
+
 
     while [[ true ]]; do
         wm_infos=""
@@ -96,27 +114,27 @@ index_to_icon() {
             case ${i:0:1} in
                 '#')
                     # focused occupied desktop
-                    FG=$COLOR_FOCUSED_FG
+                    FG=$COLOR_FOCUSED_WRKSPC
                     wm_info_str=" $(index_to_icon $counter) "
                     ;;
                 '+')
                     # focused free desktop
-                    FG=$COLOR_FOCUSED_FG
+                    FG=$COLOR_FOCUSED_WRKSPC
                     wm_info_str="$(index_to_icon $counter) "
                     ;;
                 '!')
-                    # focused urgent desktop
-                    FG=$COLOR_FOCUSED_URGENT_FG
+                    # urgent desktop
+                    FG=$COLOR_URGENT_WRKSPC
                     wm_info_str=" $(index_to_icon $counter) "
                     ;;
                 ':')
                     # occupied desktop
-                    FG=$COLOR_OCCUPIED_FG
+                    FG=$COLOR_OCCUPIED_WRKSPC
                     wm_info_str=" $(index_to_icon $counter) "
                     ;;
                 '-')
                     # occupied desktop
-                    FG=$COLOR_OCCUPIED_FG
+                    FG=$COLOR_OCCUPIED_WRKSPC
                     wm_info_str=" $(index_to_icon $counter) "
                     ;;
                 '.')
@@ -135,6 +153,6 @@ index_to_icon() {
         echo "W$wm_infos"
     done > $PANEL_FIFO &
 
-    ~/.config/bar/panel_bar < "$PANEL_FIFO" | lemonbar -u 1 -a 32 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "Hack:size=8" -F "$COLOR_DEFAULT_FG" -B "#00000000" -f "FontAwesome:size=10" eDP-1 | sh &
+    $HOME/.config/bar/panel_bar < "$PANEL_FIFO" | lemonbar -u 1 -a 32 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "Hack:size=8" -F "$COLOR_WHITE" -B "#00000000" -f "FontAwesome:size=10" eDP-1 | sh &
 
     wait

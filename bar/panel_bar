@@ -12,11 +12,35 @@ while read -r line ; do
     case $line in
         D*)
             # clock output
-            currDate="%{F$COLOR_TITLE_FG}${line#?}%{B-}%{F-}"
+            currDate="%{F$COLOR_DATE}${line#?}%{B-}%{F-}"
+            ;;
+        B*)
+            # battery output
+            status=$(get 'status' "${line#?}")
+            power=$(get 'power' "${line#?}")
+
+            battery="%{B$COLOR_DEFAULT_BG}"
+
+            if [[ $status -ge 100 ]]; then
+                battery=$battery"%{F$COLOR_BATT_FULL}  "
+            elif [[ $status -ge 75 && $status -lt 100 ]]; then
+                battery=$battery"%{F$COLOR_BATT_HIGH} $status% %{B$COLOR_DEFAULT_BG}"
+            elif [[ $status -ge 50 && $status -lt 75 ]]; then
+                battery=$battery"%{F$COLOR_BATT_LOW} $status% %{B$COLOR_DEFAULT_BG}"
+            elif [[ $status -ge 25 && $status -lt 50 ]]; then
+                battery=$battery"%{F$COLOR_BATT_LOW} $status% %{B$COLOR_DEFAULT_BG}"
+            elif [[ $status -lt 25 ]]; then
+                battery=$battery"%{F$COLOR_BATT_CRIT} $status% %{B$COLOR_DEFAULT_BG}"
+            fi
+
+            if [[ $power == "Charging" ]]; then
+                battery=$battery"%{F$COLOR_YELLOW} "
+            fi
+
             ;;
         T*)
             # clock output
-            currTime=" %{F$COLOR_TITLE_FG}${line#?}%{B-}%{F-} "
+            currTime=" %{F$COLOR_CLOCK}${line#?}%{B-}%{F-} "
             ;;
         M*)
             mpd=" ${line#?}%{B-}%{F-}"
@@ -25,5 +49,5 @@ while read -r line ; do
             wm_infos="${line#?}"
             ;;
     esac
-    printf "%s\n" "%{l}${wm_infos}%{c}${mpd}%{r}${currDate}${currTime}"
+    printf "%s\n" "%{l}${wm_infos}%{c}${mpd}%{r}${battery}${currDate}${currTime}"
 done
