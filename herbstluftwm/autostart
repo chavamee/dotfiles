@@ -18,18 +18,21 @@ Mod=Mod4   # Use the super key as the main modifier
 hc keybind Mod1-Control-Delete quit
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Shift-c close
+hc spawn light-locker --lock-on-suspend --lock-after-screensaver=10 &
+hc spawn xsetroot -cursor_name left_ptr &
+hc spawn unclutter &
+hc spawn setxkbmap -option ctrl:nocaps &
+hc spawn bash -c "([[ -f $HOME/.Xresources && -r ~/.Xresources ]] && xrdb -merge  $HOME/.Xresources) &" &
 hc spawn anamnesis --start &
 hc spawn mpd --start &
 hc spawn sleep 2 && nitrogen --restore &
 hc spawn killall compton && sleep 1 && compton -CGb
 hc spawn sleep 2 && mpd
 hc spawn sleep 2 && libinput-gestures-setup start
-hc spawn killall trayer && sleep 2 && bash -c "trayer --edge bottom --SetDockType true --transparent true --widthtype request --align center --height 18 --alpha 255 --tint 0x000000 --transparent true &"
 
 #Custom Key Bindings
 hc keybind $Mod-Return spawn termite -e zsh -c "tmux -q has-session && exec tmux attach-session -d || exec tmux new-session -n$USER -s$USER@$HOSTNAME"
-hc keybind $Mod-d spawn rofi -font "Hack 10" -show run
-hc keybind $Mod-Mod1-l spawn i3lock -f -i $HOME/media/pics/bDp9LVt.png
+hc keybind $Mod-d spawn rofi -font "Hack 10" -show run -matching fuzzy
 
 #Fn Multimedia Bindings
 hc keybind XF86AudioPlay spawn ~/.config/herbstluftwm/audio_handle/audio.sh toggle
@@ -180,3 +183,5 @@ panel=~/.config/bar/panel
     # start it on each monitor
 "$panel" &
 #done
+
+hc spawn killall trayer && sleep 2 && bash -c "trayer --edge bottom --SetDockType true --transparent true --widthtype request --align center --height 18 --alpha 255 --tint 0x000000 --transparent true &"

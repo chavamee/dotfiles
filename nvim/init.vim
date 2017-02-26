@@ -59,7 +59,7 @@ augroup vimrcEx
   autocmd FileType markdown setlocal spell
 
   " Automatically wrap at 80 characters for Markdown
-  autocmd BufRead,BufNewFile *.md setlocal textwidth=80
+  " autocmd BufRead,BufNewFile *.md setlocal textwidth=80
 
   " Automatically wrap at 72 characters and spell check git commit messages
   autocmd FileType gitcommit setlocal textwidth=72
@@ -92,8 +92,8 @@ set complete+=kspell
 set diffopt+=vertical
 
 set foldenable
-set foldlevelstart=10
-set foldnestmax=10
+"set foldlevelstart=10
+"set foldnestmax=10
 set foldmethod=syntax
 
 set hidden
@@ -118,10 +118,6 @@ Plug 'powerline/powerline'
 Plug 'vim-airline/vim-airline'
 
 Plug 'junegunn/vim-easy-align'
-
-"Plug 'Shougo/unite.vim'
-
-"Plug 'rhysd/unite-redpen.vim'
 
 Plug 'scrooloose/syntastic'
 
@@ -153,6 +149,8 @@ Plug 'xolox/vim-easytags'
 
 Plug 'tpope/vim-dispatch'
 
+Plug 'python-mode/python-mode'
+
 Plug 'racer-rust/vim-racer'
 
 Plug 'wellle/tmux-complete.vim'
@@ -163,19 +161,13 @@ Plug 'Shougo/neoinclude.vim'
 
 Plug 'nathanaelkane/vim-indent-guides'
 
-"Plug 'tpope/vim-surround'
-
 Plug 'ntpeters/vim-better-whitespace'
 
 Plug 'haya14busa/incsearch.vim'
 
 Plug 'tpope/vim-commentary'
 
-"Plug 'tpope/vim-endwise'
-
 Plug 'tpope/vim-eunuch'
-
-"Plug 'godlygeek/tabular'
 
 Plug 'easymotion/vim-easymotion'
 
@@ -186,8 +178,6 @@ Plug 'xolox/vim-notes'
 Plug 'KabbAmine/zeavim.vim'
 
 Plug 'xolox/vim-misc'
-
-"Plug 'Raimondi/delimitMate'
 
 Plug 'jiangmiao/auto-pairs'
 
@@ -202,6 +192,8 @@ Plug 'alepez/vim-gtest'
 Plug 'rust-lang/rust.vim'
 
 Plug 'sheerun/vim-polyglot'
+
+Plug 'suan/vim-instant-markdown'
 
 Plug 'plasticboy/vim-markdown'
 " Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
@@ -264,33 +256,23 @@ endif
 let g:NERDSpaceDelims = 1
 let g:NERDCompactSexyComs = 1
 
+set completeopt+=noselect
 set omnifunc=syntaxcomplete#Complete
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#disable_auto_complete = 0
-set completeopt+=noselect
+let g:deoplete#disable_auto_complete = 1
 let g:deoplete#enable_ignore_case = 'ignorecase'
-let g:deoplete#omni_patterns = {}
-let g:deoplete#omni_patterns.html = '<[^>]*'
-let g:deoplete#omni_patterns.xml  = '<[^>]*'
-let g:deoplete#omni_patterns.md   = '<[^>]*'
-let g:deoplete#omni_patterns.css   = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
-let g:deoplete#omni_patterns.scss   = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
-let g:deoplete#omni_patterns.sass   = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
-let g:deoplete#omni_patterns.javascript = '[^. \t]\.\%(\h\w*\)\?'
-let g:deoplete#omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
-let g:deoplete#omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-let g:deoplete#omni_patterns.go = '[^.[:digit:] *\t]\.\w*'
-let g:deoplete#omni_patterns.ruby = ['[^. *\t]\.\w*', '\h\w*::']
-" let g:deoplete#omni_patterns.python = '[^. \t]\.\w*'
-let g:deoplete#omni_patterns.python = ['[^. *\t]\.\h\w*\','\h\w*::']
-let g:deoplete#omni_patterns.python3 = ['[^. *\t]\.\h\w*\','\h\w*::']
 let g:deoplete#sources#go#gocode_binary = '/usr/bin/gocode'
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 let g:deoplete#sources#go#use_cache = 1
+
 autocmd CmdwinEnter * let b:deoplete_sources = ['buffer']
 
 set conceallevel=2
 set concealcursor=vin
+
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 let g:clang_snippets = 1
 let g:clang_snippets_engine = 'clang_complete'
@@ -301,10 +283,6 @@ set completeopt=menu,menuone
 
 " Limit popup menu height
 set pumheight=20
-
-imap     <Nul> <C-Space>
-inoremap <expr><C-Space> deoplete#mappings#manual_complete()
-inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
 
 let g:easytags_cmd='/usr/bin/ctags'
 let g:easytags_suppress_ctags_warning = 1
@@ -324,7 +302,7 @@ let g:syntastic_always_populate_loc_list=1
 let g:syntastic_enable_balloons = 1
 let g:syntastic_aggregate_errors = 1
 
-let g:syntastic_python_checkers = ['python', 'flake8', 'pep8', 'pyflakes']
+"let g:syntastic_python_checkers = ['python', 'flake8', 'pep8', 'pyflakes', 'pylint']
 let g:syntastic_cpp_checkers = ["cppcheck", "clang_check", "clang_tidy"]
 let g:syntastic_sh_checkers = ["sh", "bashate"]
 let g:syntastic_javascript_checkers = ["jslint", "flow"]
@@ -391,10 +369,10 @@ autocmd! User FzfStatusLine call <SID>fzf_statusline()
 "            Keybindings
 " ==================================
 
-nnoremap <c-p> :FZF<CR>
+nnoremap <c-p> :FZF <cr>
 
-noremap <F2> :lnext <CR>
-noremap <F3> :lprevious <CR>
+noremap <F2> :lnext <cr>
+noremap <F3> :lprevious <cr>
 
 " NERDtree
 nnoremap <F4> :NERDTreeToggle <cr>
@@ -403,37 +381,29 @@ nnoremap <F4> :NERDTreeToggle <cr>
 nnoremap <F6> :UndotreeToggle <cr>
 
 " Spell check
-noremap <F7> :setlocal spell! spelllang=en_us<CR>
+noremap <F7> :setlocal spell! spelllang=en_us<cr>
 
 " Tagbar
-nmap <F8> :TagbarToggle <CR>
-
-" Pyclewn
-" nnoremap <F9> :exe "Cbreak " . expand("%:p") . ":" . line(".")<CR>
-
-" YCM Diagnostics Refresh
-nnoremap <F11> :YcmForceCompileAndDiagnostics <CR>
+nmap <F8> :TagbarToggle <cr>
 
 " Index ctags from any project, including those outside Rails
-map <Leader>ct :!ctags -R .<CR>
+map <Leader>ct :!ctags -R .<cr>
 
 " Switch between the last two files
 nnoremap <leader><leader> <c-^>
 
-nnoremap <Left>  :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up>    :echoe "Use k"<CR>
-nnoremap <Down>  :echoe "Use j"<CR>
-
-" vim-rspec mappings
-nnoremap <Leader>t :call RunCurrentSpecFile()<CR>
-nnoremap <Leader>s :call RunNearestSpec()<CR>
-nnoremap <Leader>l :call RunLastSpec()<CR>
-
-" Run commands that require an interactive shell
-nnoremap <Leader>r :RunInInteractiveShell<space>
+nnoremap <Left>  :echoe "Use h"<cr>
+nnoremap <Right> :echoe "Use l"<cr>
+nnoremap <Up>    :echoe "Use k"<cr>
+nnoremap <Down>  :echoe "Use j"<cr>
 
 " incsearch
 map /  <Plug>(incsearch-forward)
 map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
+
+imap     <Nul> <C-Space>
+inoremap <expr><C-Space> deoplete#mappings#manual_complete()
+inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
+nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
+
