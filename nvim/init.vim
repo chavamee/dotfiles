@@ -39,6 +39,23 @@ set copyindent      " copy indent from the previous line"
 set colorcolumn=+1
 set cursorline cursorcolumn
 
+" Open new split panes to right and bottom, which feels more natural
+set splitbelow
+set splitright
+
+" Autocomplete with dictionary words when spell check is on
+set complete+=kspell
+
+" Always use vertical diffs
+set diffopt+=vertical
+
+set foldenable
+set foldlevelstart=2
+"set foldnestmax=10
+set foldmethod=syntax
+set hidden
+set cmdheight=2
+
 augroup vimrcEx
   autocmd!
 
@@ -51,8 +68,8 @@ augroup vimrcEx
     \ endif
 
   autocmd BufRead,BufNewFile *.md set filetype=markdown
-  " Set all SCons files as python
-  autocmd BufRead,BufNewFile SCons* set filetype=python
+  " Set all SCons files as python2
+  autocmd BufRead,BufNewFile SCons* set filetype=python2
   autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
 
   " Enable spellchecking for Markdown
@@ -81,23 +98,6 @@ let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
 
-" Open new split panes to right and bottom, which feels more natural
-set splitbelow
-set splitright
-
-" Autocomplete with dictionary words when spell check is on
-set complete+=kspell
-
-" Always use vertical diffs
-set diffopt+=vertical
-
-set foldenable
-"set foldlevelstart=10
-"set foldnestmax=10
-set foldmethod=syntax
-
-set hidden
-set cmdheight=2
 
 autocmd BufWritePre * StripWhitespace
 
@@ -110,6 +110,8 @@ function! DoRemote(arg)
 endfunction
 
 call plug#begin()
+
+Plug 'mattn/emmet-vim'
 
 Plug 'morhetz/gruvbox'
 
@@ -256,19 +258,21 @@ endif
 let g:NERDSpaceDelims = 1
 let g:NERDCompactSexyComs = 1
 
-set completeopt+=noselect
-set omnifunc=syntaxcomplete#Complete
+"set completeopt+=noselect
+"set omnifunc=syntaxcomplete#Complete
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#disable_auto_complete = 1
 let g:deoplete#enable_ignore_case = 'ignorecase'
 let g:deoplete#sources#go#gocode_binary = '/usr/bin/gocode'
-let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+"let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 let g:deoplete#sources#go#use_cache = 1
 
-autocmd CmdwinEnter * let b:deoplete_sources = ['buffer']
+"autocmd CmdwinEnter * let b:deoplete_sources = ['buffer']
 
 set conceallevel=2
 set concealcursor=vin
+
+let g:clang_complete_auto = 0
 
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
@@ -291,6 +295,7 @@ let g:easytags_suppress_report = 1
 
 let g:clang_library_path="/usr/lib/libclang.so"
 
+let g:AutoPairsUseInsertedCount = 1
 " Syntastic
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -302,7 +307,6 @@ let g:syntastic_always_populate_loc_list=1
 let g:syntastic_enable_balloons = 1
 let g:syntastic_aggregate_errors = 1
 
-"let g:syntastic_python_checkers = ['python', 'flake8', 'pep8', 'pyflakes', 'pylint']
 let g:syntastic_cpp_checkers = ["cppcheck", "clang_check", "clang_tidy"]
 let g:syntastic_sh_checkers = ["sh", "bashate"]
 let g:syntastic_javascript_checkers = ["jslint", "flow"]
@@ -313,9 +317,6 @@ let g:syntastic_cpp_check_header = 1
 
 let g:syntastic_javascript_checkers = ['standard']
 
-let g:syntastic_go_checkers = ['go', 'gofmt']
-"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-
 " Vim-go
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
@@ -324,6 +325,10 @@ let g:go_highlight_interfaces = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_fmt_autosave = 1
+
+" Python-mode
+let g:pymode_rope_completion = 0
+let g:pymode_python = 'python3'
 
 " Powerline
 let $PYTHONPATH="/usr/lib/python3.3/site-packages"
@@ -351,9 +356,6 @@ let g:airline_mode_map = {
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline_section_error=''
-
-let g:flake8_show_in_gutter=1
-let g:flake8_show_in_file=1
 
 function! s:fzf_statusline()
     " Override statusline as you like
