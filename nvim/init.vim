@@ -4,6 +4,8 @@ filetype indent on
 filetype plugin on
 filetype on
 
+let mapleader=","
+
 function! EnhanceCppSyntax()
   syn match cppFuncDef "::\~\?\zs\h\w*\ze([^)]*\()\s*\(const\)\?\)\?$"
   hi def link cppFuncDef Special
@@ -51,43 +53,42 @@ set diffopt+=vertical
 
 set foldenable
 set foldlevelstart=2
-"set foldnestmax=10
 set foldmethod=syntax
 set hidden
 set cmdheight=2
 
 augroup vimrcEx
-  autocmd!
+    autocmd!
 
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it for commit messages, when the position is invalid, or when
-  " inside an event handler (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-    \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it for commit messages, when the position is invalid, or when
+    " inside an event handler (happens when dropping a file on gvim).
+    autocmd BufReadPost *
+                \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
+                \   exe "normal g`\"" |
+                \ endif
 
-  autocmd BufRead,BufNewFile *.md set filetype=markdown
-  " Set all SCons files as python2
-  autocmd BufRead,BufNewFile SCons* set filetype=python2
-  autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
+    autocmd BufRead,BufNewFile *.md set filetype=markdown
+    " Set all SCons files as python2
+    autocmd BufRead,BufNewFile SCons* set filetype=python2
+    autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
 
-  " Enable spellchecking for Markdown
-  autocmd FileType markdown setlocal spell
+    " Enable spellchecking for Markdown
+    autocmd FileType markdown setlocal spell
 
-  " Automatically wrap at 80 characters for Markdown
-  " autocmd BufRead,BufNewFile *.md setlocal textwidth=80
+    " Automatically wrap at 80 characters for Markdown
+    " autocmd BufRead,BufNewFile *.md setlocal textwidth=80
 
-  " Automatically wrap at 72 characters and spell check git commit messages
-  autocmd FileType gitcommit setlocal textwidth=72
-  autocmd FileType gitcommit setlocal spell
+    " Automatically wrap at 72 characters and spell check git commit messages
+    autocmd FileType gitcommit setlocal textwidth=72
+    autocmd FileType gitcommit setlocal spell
 
-  autocmd FileType javascript setlocal shiftwidth=2
-  autocmd BufRead,BufNewFile *.pug setlocal shiftwidth=2
-  autocmd FileType gitcommit setlocal spell
+    autocmd FileType javascript setlocal shiftwidth=2
+    autocmd BufRead,BufNewFile *.pug setlocal shiftwidth=2
+    autocmd FileType gitcommit setlocal spell
 
-  " Allow stylesheets to autocomplete hyphenated words
-  autocmd FileType css,scss,sass setlocal iskeyword+=-
+    " Allow stylesheets to autocomplete hyphenated words
+    autocmd FileType css,scss,sass setlocal iskeyword+=-
 augroup END
 
 set wildmode=list:longest,list:full
@@ -97,7 +98,6 @@ let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
-
 
 autocmd BufWritePre * StripWhitespace
 
@@ -111,7 +111,25 @@ endfunction
 
 call plug#begin()
 
+" === Formatting Plugins ===
+
 Plug 'mattn/emmet-vim'
+
+Plug 'junegunn/vim-easy-align'
+
+Plug 'ConradIrwin/vim-bracketed-paste'
+
+Plug 'nathanaelkane/vim-indent-guides'
+
+Plug 'ntpeters/vim-better-whitespace'
+
+Plug 'tpope/vim-commentary'
+
+Plug 'jiangmiao/auto-pairs'
+
+Plug 'scrooloose/nerdcommenter'
+
+" === Theme Plugins ===
 
 Plug 'morhetz/gruvbox'
 
@@ -119,105 +137,105 @@ Plug 'powerline/powerline'
 
 Plug 'vim-airline/vim-airline'
 
-Plug 'junegunn/vim-easy-align'
+Plug 'mhinz/vim-startify'
 
-Plug 'scrooloose/syntastic'
-
-Plug 'pangloss/vim-javascript'
-
-Plug 'jelera/vim-javascript-syntax'
-
-Plug 'tpope/vim-fugitive'
+" === Visual/Informative Plugins ===
 
 Plug 'airblade/vim-gitgutter'
 
+Plug 'tpope/vim-fugitive'
+
+" === Programming Languages Plugins ===
+
+Plug 'sheerun/vim-polyglot'
+
+" <<< Language Syntax/Formatting >>>
+Plug 'jelera/vim-javascript-syntax', {'for': 'javascript'}
+
+Plug 'pangloss/vim-javascript', {'for': 'javascript'}
+
+Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp'}
+
+Plug 'Mizuchi/STL-Syntax'
+
+Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+
+Plug 'rust-lang/rust.vim', {'for': 'rust'}
+
+" <<< Language Bundles >>>
+
+Plug 'python-mode/python-mode', {'for': 'python'}
+
+Plug 'fatih/vim-go', { 'tag': '*', 'do': ':GoInstallBinaries' }
+
+" <<< Language Debug >>>
+
+Plug 'scrooloose/syntastic'
+
 Plug 'joonty/vdebug'
 
-Plug 'honza/vim-snippets'
-
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
-
-Plug 'junegunn/fzf.vim'
-
-Plug 'christoomey/vim-tmux-navigator'
-
-Plug 'mhinz/vim-signify'
-
-Plug 'ConradIrwin/vim-bracketed-paste'
-
-Plug 'sirver/UltiSnips'
-
-Plug 'xolox/vim-easytags'
+Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 
 Plug 'tpope/vim-dispatch'
 
-Plug 'python-mode/python-mode'
+" <<< Language Autocomplete >>>
 
-Plug 'racer-rust/vim-racer'
+Plug 'racer-rust/vim-racer', {'for': 'rust'}
 
-Plug 'wellle/tmux-complete.vim'
+Plug 'nsf/gocode', {'for': 'go'}
+
+Plug 'carlitux/deoplete-ternjs', {'for': 'javascript'}
+
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+
+Plug 'zchee/deoplete-jedi', {'for': 'python'}
+
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+
+Plug 'Rip-Rip/clang_complete', { 'for': 'cpp' }
+
+" <<< Language Documentation >>>
+
+Plug 'KabbAmine/zeavim.vim'
+
+Plug 'honza/vim-snippets'
+
+Plug 'sirver/UltiSnips'
+
+" <<< Language Utilities >>>
 
 Plug 'Shougo/context_filetype.vim'
 
 Plug 'Shougo/neoinclude.vim'
 
-Plug 'nathanaelkane/vim-indent-guides'
-
-Plug 'ntpeters/vim-better-whitespace'
-
-Plug 'haya14busa/incsearch.vim'
-
-Plug 'tpope/vim-commentary'
-
-Plug 'tpope/vim-eunuch'
-
-Plug 'easymotion/vim-easymotion'
-
-Plug 'mhinz/vim-startify'
-
-Plug 'xolox/vim-notes'
-
-Plug 'KabbAmine/zeavim.vim'
-
-Plug 'xolox/vim-misc'
-
-Plug 'jiangmiao/auto-pairs'
-
-Plug 'mbbill/undotree'
-
-Plug 'nsf/gocode'
-
 Plug 'majutsushi/tagbar'
+
+Plug 'xolox/vim-easytags'
 
 Plug 'alepez/vim-gtest'
 
-Plug 'rust-lang/rust.vim'
+" === Navigation Plugins ===
+Plug 'haya14busa/incsearch.vim'
 
-Plug 'sheerun/vim-polyglot'
+Plug 'easymotion/vim-easymotion'
 
-Plug 'suan/vim-instant-markdown'
-
-Plug 'plasticboy/vim-markdown'
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-Plug 'fatih/vim-go', { 'tag': '*' }
-
-Plug 'octol/vim-cpp-enhanced-highlight'
-
-Plug 'Mizuchi/STL-Syntax'
-" On-demand loading
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 
-Plug 'scrooloose/nerdcommenter'
+Plug 'junegunn/fzf.vim'
 
-Plug 'carlitux/deoplete-ternjs'
+" === Utilities ===
 
-Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+Plug 'tpope/vim-eunuch'
 
-Plug 'zchee/deoplete-jedi'
+Plug 'xolox/vim-notes'
 
-Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'mbbill/undotree'
 
-Plug 'Rip-Rip/clang_complete'
+" === Misc ===
+
+Plug 'xolox/vim-misc'
+
+Plug 'christoomey/vim-tmux-navigator'
 
 call plug#end()
 
@@ -243,9 +261,6 @@ silent! colorscheme gruvbox
 " ==================================
 
 let g:racer_cmd = "/usr/bin/racer_cmd"
-let $RUST_SRC_PATH="/usr/src/rust/src"
-
-let mapleader=","
 
 " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
 if executable('ag')
@@ -258,16 +273,18 @@ endif
 let g:NERDSpaceDelims = 1
 let g:NERDCompactSexyComs = 1
 
-"set completeopt+=noselect
-"set omnifunc=syntaxcomplete#Complete
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#disable_auto_complete = 1
 let g:deoplete#enable_ignore_case = 'ignorecase'
+
 let g:deoplete#sources#go#gocode_binary = '/usr/bin/gocode'
-"let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 let g:deoplete#sources#go#use_cache = 1
 
-"autocmd CmdwinEnter * let b:deoplete_sources = ['buffer']
+" Only have c++ completion from clang_complete
+let g:deoplete#ignore_sources = {}
+let g:deoplete#ignore_sources.cpp = ['member']
+
+autocmd CmdwinEnter * let b:deoplete_sources = ['buffer']
 
 set conceallevel=2
 set concealcursor=vin
@@ -291,11 +308,11 @@ set pumheight=20
 let g:easytags_cmd='/usr/bin/ctags'
 let g:easytags_suppress_ctags_warning = 1
 let g:easytags_suppress_report = 1
-"let g:easytags_autorecurse = 1
 
 let g:clang_library_path="/usr/lib/libclang.so"
 
 let g:AutoPairsUseInsertedCount = 1
+
 " Syntastic
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -331,7 +348,6 @@ let g:pymode_rope_completion = 0
 let g:pymode_python = 'python3'
 
 " Powerline
-let $PYTHONPATH="/usr/lib/python3.3/site-packages"
 let g:Powerline_symbols = 'fancy'
 
 " Vim-airline
@@ -409,3 +425,8 @@ inoremap <expr><C-Space> deoplete#mappings#manual_complete()
 inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
 nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
 
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
