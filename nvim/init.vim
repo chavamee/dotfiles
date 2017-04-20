@@ -4,6 +4,8 @@ filetype indent on
 filetype plugin on
 filetype on
 
+let $GOBIN="/home/chavamee/.bin"
+
 let mapleader=","
 
 function! EnhanceCppSyntax()
