@@ -1,3 +1,6 @@
+" =================================
+"             Globals
+" =================================
 runtime! archlinux.vim
 
 filetype indent on
@@ -16,7 +19,6 @@ endfunction
 " ==================================
 "             Formatting
 " ==================================
-
 set nobackup
 set nowritebackup
 set noswapfile
@@ -29,32 +31,29 @@ set hlsearch
 set ignorecase
 set smartcase
 set hidden
-set laststatus=2 " Always show statusline
+set laststatus=2
 set autowrite
-set clipboard=unnamedplus " Yank goes to clipboard as well
+set clipboard=unnamedplus
 
 set number
-set tabstop=4       " number of visual spaces per TAB
-set softtabstop=4   " number of spaces in tab when editing
-set shiftwidth=4    " number of spaces to use for autoindent
-set expandtab       " tabs are space
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
 set autoindent
-set copyindent      " copy indent from the previous line"
+set copyindent
 set colorcolumn=+1
 set cursorline cursorcolumn
 
-" Open new split panes to right and bottom, which feels more natural
 set splitbelow
 set splitright
 
-" Autocomplete with dictionary words when spell check is on
 set complete+=kspell
 
-" Always use vertical diffs
 set diffopt+=vertical
 
 set foldenable
-set foldlevelstart=2
+set foldlevelstart=3
 set foldmethod=syntax
 set hidden
 set cmdheight=2
@@ -163,6 +162,8 @@ Plug 'Mizuchi/STL-Syntax'
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 
 Plug 'rust-lang/rust.vim', {'for': 'rust'}
+
+Plug 'arakashic/chromatica.nvim', {'do': function('DoRemote')}
 
 " <<< Language Bundles >>>
 
