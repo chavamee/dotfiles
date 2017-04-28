@@ -222,7 +222,9 @@ Plug 'haya14busa/incsearch.vim'
 
 Plug 'easymotion/vim-easymotion'
 
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeTabsToggle' }
+
+Plug 'jistr/vim-nerdtree-tabs'
 
 Plug 'junegunn/fzf.vim'
 
@@ -398,7 +400,7 @@ noremap <F2> :lnext <cr>
 noremap <F3> :lprevious <cr>
 
 " NERDtree
-nnoremap <F4> :NERDTreeToggle <cr>
+nnoremap <F4> :NERDTreeTabsToggle <cr>
 
 " UndoTree
 nnoremap <F6> :UndotreeToggle <cr>
