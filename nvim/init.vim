@@ -126,7 +126,7 @@ Plug 'ntpeters/vim-better-whitespace'
 
 Plug 'tpope/vim-commentary'
 
-Plug 'jiangmiao/auto-pairs'
+Plug 'Raimondi/delimitMate'
 
 Plug 'scrooloose/nerdcommenter'
 
@@ -271,6 +271,8 @@ if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
 
 endif
+
+let g:delimitMate_expand_cr = 1
 
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
