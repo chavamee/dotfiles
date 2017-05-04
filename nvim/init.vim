@@ -36,9 +36,9 @@ set autowrite
 set clipboard=unnamedplus
 
 set number
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 set expandtab
 set autoindent
 set copyindent
@@ -151,9 +151,9 @@ Plug 'tpope/vim-fugitive'
 Plug 'sheerun/vim-polyglot'
 
 " <<< Language Syntax/Formatting >>>
-Plug 'jelera/vim-javascript-syntax', {'for': 'javascript'}
+Plug 'jelera/vim-javascript-syntax', { 'for': ['javascript', 'javascript.jsx'] }
 
-Plug 'pangloss/vim-javascript', {'for': 'javascript'}
+Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }
 
 Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp'}
 
@@ -187,7 +187,9 @@ Plug 'racer-rust/vim-racer', {'for': 'rust'}
 
 Plug 'nsf/gocode', {'for': 'go'}
 
-Plug 'carlitux/deoplete-ternjs', {'for': 'javascript'}
+Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
+
+Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 
 Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 
@@ -235,6 +237,8 @@ Plug 'tpope/vim-eunuch'
 Plug 'xolox/vim-notes'
 
 Plug 'mbbill/undotree'
+
+Plug 'iamcco/markdown-preview.vim'
 
 " === Misc ===
 
@@ -291,16 +295,16 @@ let g:deoplete#sources#go#use_cache = 1
 let g:deoplete#ignore_sources = {}
 let g:deoplete#ignore_sources.cpp = ['member']
 
-autocmd CmdwinEnter * let b:deoplete_sources = ['buffer']
+"autocmd CmdwinEnter * let b:deoplete_sources = ['buffer']
 
 set conceallevel=2
 set concealcursor=vin
 
 let g:clang_complete_auto = 0
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:clang_use_library = 1
+
+let g:UltiSnipsExpandTrigger="<C-j>"
 
 let g:clang_snippets = 1
 let g:clang_snippets_engine = 'clang_complete'
@@ -340,6 +344,9 @@ let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_cpp_check_header = 1
 
 let g:syntastic_javascript_checkers = ['standard']
+
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 " Vim-go
 let g:go_highlight_functions = 1
