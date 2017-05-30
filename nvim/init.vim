@@ -177,8 +177,6 @@ Plug 'scrooloose/syntastic'
 
 Plug 'joonty/vdebug'
 
-Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
-
 Plug 'tpope/vim-dispatch'
 
 " <<< Language Autocomplete >>>
@@ -238,7 +236,7 @@ Plug 'xolox/vim-notes'
 
 Plug 'mbbill/undotree'
 
-Plug 'iamcco/markdown-preview.vim'
+Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 
 " === Misc ===
 
@@ -259,6 +257,7 @@ syntax enable
 autocmd Syntax cpp call EnhanceCppSyntax()
 
 let g:gruvbox_contrast_dark='hard'
+let g:gruvbox_italic=1
 let g:load_doxygen_syntax='1'
 let g:cpp_class_scope_highlight = 1
 set background=dark
@@ -444,3 +443,10 @@ xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
+au FileType go nmap <Leader>i <Plug>(go-info)
+au FileType go nmap <Leader>gd <Plug>(go-doc-vertical)
+au FileType go nmap <Leader>r <Plug>(go-run)
+au FileType go nmap <Leader>b <Plug>(go-build)
+au FileType go nmap <Leader>t <Plug>(go-test)
+au FileType go nmap gd <Plug>(go-def-tab)
