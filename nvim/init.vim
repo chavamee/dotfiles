@@ -7,18 +7,12 @@ filetype indent on
 filetype plugin on
 filetype on
 
-let $GOBIN="/home/chavamee/.bin"
-
 let mapleader=","
-
-function! EnhanceCppSyntax()
-  syn match cppFuncDef "::\~\?\zs\h\w*\ze([^)]*\()\s*\(const\)\?\)\?$"
-  hi def link cppFuncDef Special
-endfunction
 
 " ==================================
 "             Formatting
 " ==================================
+
 set nobackup
 set nowritebackup
 set noswapfile
@@ -106,10 +100,6 @@ autocmd BufWritePre * StripWhitespace
 "            Pluggins
 " ==================================
 
-function! DoRemote(arg)
-  UpdateRemotePlugins
-endfunction
-
 call plug#begin()
 
 " === Formatting Plugins ===
@@ -151,6 +141,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'sheerun/vim-polyglot'
 
 " <<< Language Syntax/Formatting >>>
+
 Plug 'jelera/vim-javascript-syntax', { 'for': ['javascript', 'javascript.jsx'] }
 
 Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }
@@ -163,17 +154,19 @@ Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 
 Plug 'rust-lang/rust.vim', {'for': 'rust'}
 
-Plug 'arakashic/chromatica.nvim', {'do': function('DoRemote')}
+Plug 'arakashic/chromatica.nvim', {'do': ':UpdateRemotePlugins'}
+
+Plug 'rhysd/vim-clang-format'
 
 " <<< Language Bundles >>>
 
 Plug 'python-mode/python-mode', {'for': 'python'}
 
-Plug 'fatih/vim-go', { 'tag': '*', 'do': ':GoInstallBinaries' }
+Plug 'fatih/vim-go', { 'tag': '*', 'do': ':GoUpdateBinaries' }
 
 " <<< Language Debug >>>
 
-Plug 'scrooloose/syntastic'
+Plug 'w0rp/ale'
 
 Plug 'joonty/vdebug'
 
@@ -183,17 +176,15 @@ Plug 'tpope/vim-dispatch'
 
 Plug 'racer-rust/vim-racer', {'for': 'rust'}
 
-Plug 'nsf/gocode', {'for': 'go'}
-
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
 
 Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 
-Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 Plug 'zchee/deoplete-jedi', {'for': 'python'}
 
-Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'zchee/deoplete-go', {'do': 'make'}
 
 Plug 'Rip-Rip/clang_complete', { 'for': 'cpp' }
 
@@ -207,10 +198,6 @@ Plug 'sirver/UltiSnips'
 
 " <<< Language Utilities >>>
 
-Plug 'Shougo/context_filetype.vim'
-
-Plug 'Shougo/neoinclude.vim'
-
 Plug 'majutsushi/tagbar'
 
 Plug 'xolox/vim-easytags'
@@ -218,6 +205,7 @@ Plug 'xolox/vim-easytags'
 Plug 'alepez/vim-gtest'
 
 " === Navigation Plugins ===
+
 Plug 'haya14busa/incsearch.vim'
 
 Plug 'easymotion/vim-easymotion'
@@ -287,14 +275,16 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#disable_auto_complete = 1
 let g:deoplete#enable_ignore_case = 'ignorecase'
 
-let g:deoplete#sources#go#gocode_binary = '/usr/bin/gocode'
-let g:deoplete#sources#go#use_cache = 1
+let g:deoplete#sources#go#gocode_binary = $GOBIN.'/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
-" Only have c++ completion from clang_complete
 let g:deoplete#ignore_sources = {}
-let g:deoplete#ignore_sources.cpp = ['member']
+let g:deoplete#ignore_sources._ = ['buffer']
 
-"autocmd CmdwinEnter * let b:deoplete_sources = ['buffer']
+let g:ale_linters = {
+\   'cpp': ['clangtidy', 'clangcheck'],
+\   'go' :  ['gofmt', 'gometalinter', 'gosimple', 'go vet', 'staticcheck'],
+\}
 
 set conceallevel=2
 set concealcursor=vin
@@ -304,13 +294,13 @@ let g:clang_complete_auto = 0
 let g:clang_use_library = 1
 
 let g:UltiSnipsExpandTrigger="<C-j>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 let g:clang_snippets = 1
 let g:clang_snippets_engine = 'clang_complete'
 
-" Complete options (disable preview scratch window, longest removed to aways
-" show menu)
-set completeopt=menu,menuone
+set completeopt+=noselect
 
 " Limit popup menu height
 set pumheight=20
@@ -319,33 +309,9 @@ let g:easytags_cmd='/usr/bin/ctags'
 let g:easytags_suppress_ctags_warning = 1
 let g:easytags_suppress_report = 1
 
-let g:clang_library_path="/usr/lib/libclang.so"
+"let g:clang_library_path="/usr/lib/libclang.so"
 
 let g:AutoPairsUseInsertedCount = 1
-
-" Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_enable_balloons = 1
-let g:syntastic_aggregate_errors = 1
-
-let g:syntastic_cpp_checkers = ["cppcheck", "clang_check", "clang_tidy"]
-let g:syntastic_sh_checkers = ["sh", "bashate"]
-let g:syntastic_javascript_checkers = ["jslint", "flow"]
-let g:syntastic_json_checkers = ["jsonlint"]
-
-let g:syntastic_cpp_compiler = 'clang++'
-let g:syntastic_cpp_check_header = 1
-
-let g:syntastic_javascript_checkers = ['standard']
-
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 " Vim-go
 let g:go_highlight_functions = 1
