@@ -108,13 +108,9 @@ Plug 'mattn/emmet-vim'
 
 Plug 'junegunn/vim-easy-align'
 
-Plug 'ConradIrwin/vim-bracketed-paste'
-
 Plug 'nathanaelkane/vim-indent-guides'
 
 Plug 'ntpeters/vim-better-whitespace'
-
-Plug 'tpope/vim-commentary'
 
 Plug 'Raimondi/delimitMate'
 
@@ -190,8 +186,6 @@ Plug 'Rip-Rip/clang_complete', { 'for': 'cpp' }
 
 " <<< Language Documentation >>>
 
-Plug 'KabbAmine/zeavim.vim'
-
 Plug 'honza/vim-snippets'
 
 Plug 'sirver/UltiSnips'
@@ -242,7 +236,6 @@ set termguicolors
 set guifont=Hack
 
 syntax enable
-autocmd Syntax cpp call EnhanceCppSyntax()
 
 let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_italic=1
@@ -279,7 +272,7 @@ let g:deoplete#sources#go#gocode_binary = $GOBIN.'/gocode'
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 let g:deoplete#ignore_sources = {}
-let g:deoplete#ignore_sources._ = ['buffer']
+let g:deoplete#ignore_sources._ = ['buffer', 'around']
 
 let g:ale_linters = {
 \   'cpp': ['clangtidy', 'clangcheck'],
@@ -288,10 +281,11 @@ let g:ale_linters = {
 
 set conceallevel=2
 set concealcursor=vin
+set completeopt=menu,menuone
 
 let g:clang_complete_auto = 0
-
 let g:clang_use_library = 1
+
 
 let g:UltiSnipsExpandTrigger="<C-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
@@ -299,6 +293,7 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 let g:clang_snippets = 1
 let g:clang_snippets_engine = 'clang_complete'
+let g:clang_conceal_snippets=1
 
 set completeopt+=noselect
 
@@ -378,10 +373,13 @@ nnoremap <F4> :NERDTreeTabsToggle <cr>
 nnoremap <F6> :UndotreeToggle <cr>
 
 " Spell check
-noremap <F7> :setlocal spell! spelllang=en_us<cr>
+nnoremap <F7> :setlocal spell! spelllang=en_us<cr>
 
 " Tagbar
-nmap <F8> :TagbarToggle <cr>
+nnoremap <F8> :TagbarToggle <cr>
+
+" IndentGuides
+nnoremap <F9> :IndentGuidesToggle <cr>
 
 " Index ctags from any project, including those outside Rails
 map <Leader>ct :!ctags -R .<cr>
