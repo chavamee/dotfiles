@@ -47,7 +47,7 @@ set complete+=kspell
 set diffopt+=vertical
 
 set foldenable
-set foldlevelstart=3
+set foldlevelstart=4
 set foldmethod=syntax
 set hidden
 set cmdheight=2
@@ -153,6 +153,8 @@ Plug 'rust-lang/rust.vim', {'for': 'rust'}
 Plug 'arakashic/chromatica.nvim', {'do': ':UpdateRemotePlugins'}
 
 Plug 'rhysd/vim-clang-format'
+
+Plug 'mesonbuild/meson' | Plug '~/.config/nvim/plugged/meson/syntax-highlighting/vim'
 
 " <<< Language Bundles >>>
 

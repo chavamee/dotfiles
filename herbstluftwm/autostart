@@ -18,7 +18,6 @@ Mod=Mod4   # Use the super key as the main modifier
 hc keybind Mod1-Control-Delete quit
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Shift-c close
-hc spawn light-locker --lock-on-suspend --lock-after-screensaver=10 &
 hc spawn xsetroot -cursor_name left_ptr &
 hc spawn unclutter &
 hc spawn setxkbmap -option ctrl:nocaps &
@@ -28,7 +27,6 @@ hc spawn mpd --start &
 hc spawn sleep 2 && nitrogen --restore &
 hc spawn killall compton && sleep 1 && compton -CGb
 hc spawn sleep 2 && mpd
-hc spawn sleep 2 && libinput-gestures-setup start
 
 #Custom Key Bindings
 hc keybind $Mod-Return spawn termite -e zsh -c "tmux -q has-session && exec tmux attach-session -d || exec tmux new-session -n$USER -s$USER@$HOSTNAME"
@@ -178,7 +176,7 @@ herbstclient set tree_style '╾│ ├└╼─┐'
 hc detect_monitors
 
 # find the panel
-panel=~/.config/bar/panel
+#panel=~/.config/bar/panel
 #for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
     # start it on each monitor
 "$panel" &
